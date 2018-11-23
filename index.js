@@ -17,9 +17,17 @@ const courseSchema = new mongoose.Schema({
 // .. Define the model based on the schema
 const Course = mongoose.model('Course', courseSchema);
 
-const course = new Course({
-    name: 'Node.js Course',
-    author: 'Mosh',
-    tags: ['node', 'backend'],
-    isPublished: true
-});
+async function createCourse() {
+    // Create a new Course object
+    const course = new Course({
+        name: 'Node.js Course',
+        author: 'Mosh',
+        tags: ['node', 'backend'],
+        isPublished: true
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+createCourse();

@@ -61,6 +61,7 @@ async function getCourses() {
         // .and([])
         // --> Regular Expression Examples
         // .find( {author: /^Mosh/ })
+        // --> Pagination Example
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .sort({ name: 1 })

@@ -18,13 +18,18 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function getPublishedCourses() {
     // Create Query
-    const courses = await Course
+    return courses = await Course
         .find()
         .and([ { isPublished: true }, { tags: 'backend' } ])
         .sort({ name: 1 })
         .select({ name: 1, author: 1});
     
+}
+
+// Enforcing Seperation of Concerns
+async function run() {
+    const courses = await getPublishedCourses();
     console.log(courses);
 }
 
-getPublishedCourses();
+run();

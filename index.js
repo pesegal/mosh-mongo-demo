@@ -45,6 +45,11 @@ async function getCourses() {
     // or
     // and
 
+    // --> Pagination Example
+    const pageNumber = 2;
+    const pageSize = 10;
+    // /api/courses?pageNumber=2&pageSize=10 realworld.
+
     const courses = await Course
         .find({ author: 'Mosh', isPublished: true })
         // --> Example of comparison operators
@@ -56,7 +61,8 @@ async function getCourses() {
         // .and([])
         // --> Regular Expression Examples
         // .find( {author: /^Mosh/ })
-        .limit(10)
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
         .sort({ name: 1 })
         .countDocuments();
     console.log(courses);

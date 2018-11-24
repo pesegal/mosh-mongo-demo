@@ -20,8 +20,8 @@ async function getPublishedCourses() {
     // Create Query
     return courses = await Course
         .find({ isPublished: true, tags: { $in: ['frontend', 'backend']}})
-        .sort({ price: -1 })
-        .select({ name: 1, author: 1 });
+        .sort('-price')
+        .select('name author price');
     
 }
 

@@ -51,9 +51,11 @@ async function getCourses() {
         //.find({ price: { $gte: 10, $lte: 20 }}) 
         //.find({ price: { $in: [10, 15, 20] }})
         // --> Example of logical operators
-        .find()
-        .or([ {author: 'Mosh' }, { isPublished: true } ])
-        .and([])
+        // .find()
+        // .or([ {author: 'Mosh' }, { isPublished: true } ])
+        // .and([])
+        // --> Regular Expression Examples
+        .find( {author: /^Mosh/ })
         .limit(10)
         .sort({ name: 1 })
         .select({ name: 1, tags: 1});

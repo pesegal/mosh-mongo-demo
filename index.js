@@ -46,7 +46,7 @@ async function getCourses() {
     // and
 
     const courses = await Course
-        //.find({ author: 'Mosh', isPublished: true })
+        .find({ author: 'Mosh', isPublished: true })
         // --> Example of comparison operators
         //.find({ price: { $gte: 10, $lte: 20 }}) 
         //.find({ price: { $in: [10, 15, 20] }})
@@ -55,10 +55,10 @@ async function getCourses() {
         // .or([ {author: 'Mosh' }, { isPublished: true } ])
         // .and([])
         // --> Regular Expression Examples
-        .find( {author: /^Mosh/ })
+        // .find( {author: /^Mosh/ })
         .limit(10)
         .sort({ name: 1 })
-        .select({ name: 1, tags: 1});
+        .countDocuments();
     console.log(courses);
 }
 

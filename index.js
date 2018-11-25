@@ -17,7 +17,10 @@ const courseSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['web', 'mobile', 'network']
+        enum: ['web', 'mobile', 'network'],
+        lowercase: true,
+        //uppercase: true,
+        trim: true
     },
     author: String,
     tags: { 
@@ -29,7 +32,7 @@ const courseSchema = new mongoose.Schema({
                     // Do some async work
                     const result = v && v.length > 0;
                     callback(result);
-                }, 4000);
+                }, 500);
             },
             message: 'A course should have at least one tag.'
         }
@@ -40,7 +43,9 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: function() { return this.isPublished; }, // Can't be an arrow function because of JS BS (this ref)
         min: 5,
-        max: 150
+        max: 150,
+        get: v => Math.round(v),
+        set: v => Math.round(v)
     }
 });
 
@@ -52,10 +57,10 @@ async function createCourse() {
     const course = new Course({
         name: 'Angular Course',
         author: 'Mosh',
-        category: '-',
-        tags: null,
+        category: 'Web',
+        tags: ['frontend'],
         isPublished: true,
-        price: 150
+        price: 17.4
     });
 
     try {
@@ -69,7 +74,7 @@ async function createCourse() {
     }
 }
 
-createCourse();
+//createCourse();
 
 async function getCourses() {
     // MongoDB comparison operators::
@@ -92,7 +97,7 @@ async function getCourses() {
     // /api/courses?pageNumber=2&pageSize=10 realworld.
 
     const courses = await Course
-        .find({ author: 'Mosh', isPublished: true })
+        .find({ _id: "5bf9efa8d3a9f54893559615" })
         // --> Example of comparison operators
         //.find({ price: { $gte: 10, $lte: 20 }}) 
         //.find({ price: { $in: [10, 15, 20] }})
@@ -103,12 +108,14 @@ async function getCourses() {
         // --> Regular Expression Examples
         // .find( {author: /^Mosh/ })
         // --> Pagination Example
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
+        // .skip((pageNumber - 1) * pageSize)
+        // .limit(pageSize)
         .sort({ name: 1 })
-        .countDocuments();
-    console.log(courses);
+        //.countDocuments();
+    console.log(courses[0].price);
 }
+
+getCourses();
 
 async function updateCourse(id) {
     // Approach: Update First

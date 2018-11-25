@@ -7,11 +7,36 @@ mongoose.connect('mongodb://localhost/playground', { useNewUrlParser: true })
 
 // Defines the shape of the data (specific to moongoose, not mongoDB)
 const courseSchema = new mongoose.Schema({
-    name: { type: String, required: true }, // Make the name required.
+    name: { 
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 255
+        // match: /pattern/ 
+    }, 
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'network']
+    },
     author: String,
-    tags: [ String ], 
+    tags: { 
+        type: Array,
+        validate: { // Custom Validator Function
+            validator: function(v) {
+                return v && v.length > 0;
+            },
+            message: 'A course should have at least one tag.'
+        }
+    }, 
     date: { type: Date, default: Date.now },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() { return this.isPublished; }, // Can't be an arrow function because of JS BS (this ref)
+        min: 5,
+        max: 150
+    }
 });
 
 // .. Define the model based on the schema
@@ -20,10 +45,12 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     // Create a new Course object
     const course = new Course({
-        //name: 'Angular Course',
+        name: 'Angular Course',
         author: 'Mosh',
-        tags: ['angular', 'frontend'],
-        isPublished: true
+        category: 'web',
+        tags: null,
+        isPublished: true,
+        price: 150
     });
 
     try {
